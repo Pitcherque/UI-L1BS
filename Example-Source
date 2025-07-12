@@ -1,0 +1,221 @@
+-- Verify UI Library Usage Examples
+-- First, load the library using the raw GitHub link
+
+-- Method 1: Using loadstring (most common)
+local VerifyX = loadstring(game:HttpGet("https://raw.githubusercontent.com/Pitcherque/UI-L1BS/refs/heads/main/PithVinxy.Pith"))()
+
+-- Method 2: Alternative loading method
+-- local VerifyX = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Pitcherque/UI-L1BS/refs/heads/main/PithVinxy.Pith"))()
+
+-- ========================================
+-- EXAMPLE 1: Basic Usage
+-- ========================================
+print("Example 1: Basic verification screen")
+
+-- Create a verification window
+local Window = VerifyX.new("Initializing...", 0) -- Status text, initial percentage (0-1)
+
+-- Simulate loading process
+wait(1)
+Window:Update("Loading modules...", 0.2) -- Update status and progress
+wait(1)
+Window:Update("Connecting to server...", 0.5)
+wait(1)
+Window:Update("Authenticating...", 0.8)
+wait(1)
+Window:Complete() -- Finish and show success
+
+-- ========================================
+-- EXAMPLE 2: Advanced Usage with Speed Control
+-- ========================================
+print("Example 2: Advanced verification with custom speed")
+
+local Window2 = VerifyX.new("Starting verification...", 0)
+
+-- Update with custom speed (slower animation)
+wait(1)
+Window2:Update("Checking credentials...", 0.3, {Speed = 2}) -- Takes 2 seconds to animate
+wait(2.5)
+Window2:Update("Validating access...", 0.7, {Speed = 1.5}) -- Takes 1.5 seconds
+wait(2)
+Window2:Complete()
+
+-- ========================================
+-- EXAMPLE 3: Game Loading Screen
+-- ========================================
+print("Example 3: Game loading simulation")
+
+local GameLoader = VerifyX.new("Loading game...", 0)
+
+-- Simulate typical game loading steps
+local loadingSteps = {
+    {"Loading assets...", 0.15},
+    {"Initializing world...", 0.3},
+    {"Loading player data...", 0.5},
+    {"Connecting to servers...", 0.7},
+    {"Preparing interface...", 0.9},
+    {"Almost ready...", 0.95}
+}
+
+for i, step in ipairs(loadingSteps) do
+    wait(math.random(1, 2)) -- Random delay between 1-2 seconds
+    GameLoader:Update(step[1], step[2])
+end
+
+wait(1)
+GameLoader:Complete()
+
+-- ========================================
+-- EXAMPLE 4: Script Loader with Error Handling
+-- ========================================
+print("Example 4: Script loader with error handling")
+
+local function loadScriptWithVerification()
+    local ScriptLoader = VerifyX.new("Preparing script...", 0)
+    
+    -- Simulate script loading process
+    local success, error = pcall(function()
+        wait(0.5)
+        ScriptLoader:Update("Downloading script...", 0.2)
+        wait(1)
+        ScriptLoader:Update("Verifying integrity...", 0.5)
+        wait(1)
+        ScriptLoader:Update("Initializing components...", 0.8)
+        wait(1)
+        
+        -- Simulate potential error (remove this for real usage)
+        if math.random() > 0.8 then
+            error("Connection failed")
+        end
+        
+        ScriptLoader:Update("Finalizing...", 0.95)
+        wait(0.5)
+    end)
+    
+    if success then
+        ScriptLoader:Complete()
+        print("Script loaded successfully!")
+    else
+        ScriptLoader:Update("Error: " .. tostring(error), 0.5)
+        wait(3)
+        ScriptLoader.ScreenGui:Destroy() -- Manual cleanup on error
+        print("Script loading failed:", error)
+    end
+end
+
+-- Call the function
+loadScriptWithVerification()
+
+-- ========================================
+-- EXAMPLE 5: Multi-Stage Verification
+-- ========================================
+print("Example 5: Multi-stage verification process")
+
+local function multiStageVerification()
+    local Verifier = VerifyX.new("Stage 1: Hardware check...", 0)
+    
+    -- Stage 1
+    wait(1)
+    Verifier:Update("Stage 1: Checking system...", 0.1)
+    wait(1)
+    Verifier:Update("Stage 1: Hardware verified ✓", 0.25)
+    
+    -- Stage 2
+    wait(1)
+    Verifier:Update("Stage 2: Network verification...", 0.3)
+    wait(1)
+    Verifier:Update("Stage 2: Connection stable ✓", 0.5)
+    
+    -- Stage 3
+    wait(1)
+    Verifier:Update("Stage 3: Security check...", 0.6)
+    wait(1)
+    Verifier:Update("Stage 3: All clear ✓", 0.85)
+    
+    -- Final stage
+    wait(1)
+    Verifier:Update("Final: Granting access...", 0.95)
+    wait(1)
+    
+    Verifier:Complete()
+end
+
+multiStageVerification()
+
+-- ========================================
+-- EXAMPLE 6: Custom Function Integration
+-- ========================================
+print("Example 6: Integration with custom functions")
+
+local function downloadAndVerify(url, fileName)
+    local Downloader = VerifyX.new("Preparing download...", 0)
+    
+    -- Simulate download process
+    Downloader:Update("Connecting to: " .. fileName, 0.1)
+    wait(1)
+    
+    Downloader:Update("Downloading " .. fileName .. "...", 0.3, {Speed = 2})
+    wait(2.5)
+    
+    Downloader:Update("Verifying " .. fileName .. "...", 0.8)
+    wait(1)
+    
+    Downloader:Update("Installation complete!", 0.95)
+    wait(0.5)
+    
+    Downloader:Complete()
+    
+    -- Your custom code here after verification
+    print("File", fileName, "downloaded and verified successfully!")
+end
+
+-- Usage
+downloadAndVerify("https://example.com/script.lua", "MainScript.lua")
+
+-- ========================================
+-- TIPS FOR USAGE:
+-- ========================================
+--[[
+1. The percentage parameter should be between 0 and 1 (0% to 100%)
+2. Use :Update() to change status text and progress
+3. Use :Complete() to finish the verification and show success
+4. The Speed parameter in Update() controls animation duration
+5. The verification window automatically spins until Complete() is called
+6. Always call Complete() to properly finish the verification process
+7. The window will automatically destroy itself after completion
+]]
+
+-- ========================================
+-- COMMON PATTERNS:
+-- ========================================
+
+-- Pattern 1: Quick verification
+local quick = VerifyX.new("Verifying...", 0)
+wait(2)
+quick:Complete()
+
+-- Pattern 2: Step-by-step with feedback
+local detailed = VerifyX.new("Starting process...", 0)
+for i = 1, 5 do
+    wait(0.5)
+    detailed:Update("Step " .. i .. " of 5", i/5)
+end
+detailed:Complete()
+
+-- Pattern 3: With error handling
+local safe = VerifyX.new("Processing...", 0)
+local ok, err = pcall(function()
+    -- Your risky code here
+    safe:Update("Processing data...", 0.5)
+    wait(1)
+    safe:Update("Finalizing...", 0.9)
+    wait(0.5)
+end)
+
+if ok then
+    safe:Complete()
+else
+    safe:Update("Error occurred: " .. tostring(err), 0.5)
+    wait(3)
+    safe.ScreenGui:Destroy()
+end
